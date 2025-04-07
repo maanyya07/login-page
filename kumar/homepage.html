@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online Vehicle Rental System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: #f2f2f200;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      font-size: 24px;
+    }
+    nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+      background: #e8e2e2;
+    }
+    .hero h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 18px;
+      max-width: 700px;
+      margin: auto;
+    }
+    .vehicles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+    .vehicle-card {
+      background: rgb(163, 125, 125);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    .vehicle-card:hover {
+      transform: translateY(-5px);
+    }
+    .vehicle-card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .vehicle-card h3 {
+      margin: 10px 0;
+    }
+    .vehicle-card button {
+      padding: 10px 15px;
+      background: #764ba2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    @media (max-width: 600px) {
+      header, .hero {
+        text-align: center;
+        flex-direction: column;
+      }
+      nav {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VehicleXpress</h1>
+    <nav>
+      <a href="Home">Home</a>
+      <a href="#vehicles">Vehicles</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Reliable and Affordable Vehicle Rentals</h2>
+    <p>Browse a wide range of vehicles and rent one that suits your journey. From bikes to luxury cars — QuickRide has you covered.</p>
+  </section>
+
+  <section class="vehicles" id="vehicles">
+    <div class="vehicle-card">
+      <img src="sedan.jpg" alt="Sedan" />
+      <h3>Comfort Sedan</h3>
+      <p>$30/day</p>
+      <button>Book Now</button>
+    </div>
+    <div class="vehicle-card">
+      <img src="suv.jpg" alt="SUV" />
+      <h3>Spacious SUV</h3>
+      <p>$50/day</p>
+      <button>Book Now</button>
+    </div>
+    <div class="vehicle-card">
+      <img src="bike1.jpg" alt="Bike" />
+      <h3>Sport Bike</h3>
+      <p>$15/day</p>
+      <button>Book Now</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 QuickRide Rentals. All rights reserved.</p>
+  </footer>
+  <script>
+    if (!localStorage.getItem('isLoggedIn')) {
+  alert('You must be logged in first.');
+  window.location.href = "login.html";
+}
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const username = localStorage.getItem('username');
+  
+    if (isLoggedIn) {
+      const nav = document.querySelector('nav');
+      nav.innerHTML += `<span style="margin-left: 20px;">👋 Hello, ${username}</span>`;
+    }
+  </script>  
+</body>
+</html>

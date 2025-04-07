@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login/Signup Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      transition: 0.3s ease-in-out;
+    }
+    .toggle-btns {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .toggle-btns button {
+      padding: 10px 30px;
+      border: none;
+      background: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .toggle-btns .underline {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 50%;
+      background: #764ba2;
+      transition: 0.3s ease;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .submitbtn {
+      width: 100%;
+      padding: 10px;
+      background: #764ba2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .submitbtn:hover {
+      background: #5b3c91;
+    }
+    .message {
+      margin-top: 1rem;
+      font-size: 14px;
+      color: green;
+    }
+    .namefield {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .disable {
+      color: #aaa;
+    }
+    .text {
+      margin-top: 1rem;
+      color: #333;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="toggle-btns">
+      <button class="signupbtn">Sign Up</button>
+      <button class="signinbtn disable">Sign In</button>
+      <div class="underline"></div>
+    </div>
+    <h2 class="title">Sign Up</h2>
+    <form id="authForm">
+      <div class="form-group namefield">
+        <input type="text" id="name" placeholder="Username" />
+      </div>
+      <div class="form-group">
+        <input type="email" id="email" placeholder="Email" required />
+      </div>
+      <div class="form-group">
+        <input type="password" id="password" placeholder="Password" required />
+      </div>
+      <div class="text" id="forgotText">Password Suggestions</div>
+      <button type="submit" class="submitbtn">Submit</button>
+    </form>
+    <div class="message"></div>
+  </div>
+
+  <script>
+    const signUpBtn = document.querySelector('.signupbtn');
+    const signInBtn = document.querySelector('.signinbtn');
+    const nameField = document.querySelector('.namefield');
+    const title = document.querySelector('.title');
+    const underline = document.querySelector('.underline');
+    const forgotText = document.querySelector('#forgotText');
+    const form = document.querySelector('#authForm');
+    const message = document.querySelector('.message');
+
+    signInBtn.addEventListener('click', () => {
+      nameField.style.maxHeight = '0';
+      title.innerHTML = 'Sign In';
+      forgotText.innerHTML = 'Forgot Password?';
+      signUpBtn.classList.add('disable');
+      signInBtn.classList.remove('disable');
+      underline.style.transform = 'translateX(100%)';
+    });
+
+    signUpBtn.addEventListener('click', () => {
+      nameField.style.maxHeight = '60px';
+      title.innerHTML = 'Sign Up';
+      forgotText.innerHTML = 'Password Suggestions';
+      signUpBtn.classList.remove('disable');
+      signInBtn.classList.add('disable');
+      underline.style.transform = 'translateX(0)';
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const isSignUp = !signUpBtn.classList.contains('disable');
+      const name = document.querySelector('#name').value.trim();
+      const email = document.querySelector('#email').value.trim().toLowerCase(); // Normalize email
+      const password = document.querySelector('#password').value.trim(); // Trim the password
+
+      // Get existing users or initialize an empty array
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+
+      if (isSignUp) {
+        // Sign Up logic
+        if (!name || !email || !password) {
+          message.innerText = "Please fill in all fields.";
+          return;
+        }
+
+        // Check if email already exists
+        const emailExists = users.some(user => user.email.toLowerCase() === email); // Normalize email comparison
+        if (emailExists) {
+          message.innerText = "Email is already registered.";
+          return;
+        }
+
+        // Save new user
+        users.push({ name, email, password });
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("username", name);
+        message.innerText = `Welcome, ${name}! You are signed up. Now, please Sign In.`;
+        
+        // Switch to Sign In form after successful sign up
+        setTimeout(() => {
+          // Switch title, form and message to Sign In form
+          title.innerText = 'Sign In';
+          signUpBtn.classList.add('disable');
+          signInBtn.classList.remove('disable');
+          nameField.style.maxHeight = '0';
+          message.innerText = '';
+          document.querySelector('#name').value = ''; // Reset name field
+        }, 1500);
+
+      } else {
+        // Sign In logic
+        const matchedUser = users.find(user => user.email.toLowerCase() === email && user.password === password);
+
+        if (matchedUser) {
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("username", matchedUser.name);
+          message.innerText = `Welcome back, ${matchedUser.name}! Redirecting...`;
+          setTimeout(() => {
+            window.location.href = "homepage.html"; // Redirect to homepage after successful sign-in
+          }, 1500);
+        } else {
+          message.innerText = "Incorrect email or password.";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
